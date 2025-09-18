@@ -10,5 +10,8 @@ char**	load_map(char* filename);
 int	counter(char* filename);
 int	So_Long(char* filename);
 int	parsing_check(char** map);
+int	check_rectangular(char** map);
+int	map_is_walled(char** map);
+
 
 #endif
