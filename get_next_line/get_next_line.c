@@ -1,4 +1,4 @@
-git p/* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
@@ -12,20 +12,20 @@ git p/* ************************************************************************
 
 #include "get_next_line.h"
 
-char	*ft_save_leftovers(char *saves)
+char	*save_leftovers(char *saves)
 {
 	int		i;
-	char	*temp_leftovers;
+	char	*leftovers;
 
 	if (!saves)
 		return (NULL);
 	i = 0;
-	while (saves[i] != '\n' && saves[i])
+	while (saves[i] && saves[i] != '\n')
 		i++;
-	if (saves[i + 1] && saves[i] == '\n')
+	if (saves[i] == '\n' && saves[i + 1])
 	{
-		temp_leftovers = ft_substr_all(saves, i + 1);
-		return (temp_leftovers);
+		leftovers = ft_substr_all(saves, i + 1);
+		return (leftovers);
 	}
 	return (NULL);
 }
@@ -56,14 +56,11 @@ char	*ft_one_line(char *saves)
 	return (one_line);
 }
 
-char	*ft_read_join(char *saves, int fd)
+char	*read_and_join(int fd, char *saves)
 {
-	char	*buffer;
+	char	buffer[BUFFER_SIZE + 1];
 	int		bytes_read;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	while (bytes_read > 0)
 	{
@@ -77,18 +74,7 @@ char	*ft_read_join(char *saves, int fd)
 	}
 	if (bytes_read < 0)
 	{
-		free (buffer);
-		return (NULL);
-	}
-	free (buffer);
-	return (saves);
-}
-
-char	*ft_checksaves(char *saves)
-{
-	if (!saves || *saves == '\0')
-	{
-		free (saves);
+		free(saves);
 		return (NULL);
 	}
 	return (saves);
@@ -96,10 +82,10 @@ char	*ft_checksaves(char *saves)
 
 char	*get_next_line(int fd)
 {
-	char		*result;
 	char		*saves;
 	static char	*leftovers;
 	char		*newline;
+	char		*result;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -107,16 +93,19 @@ char	*get_next_line(int fd)
 	if (leftovers)
 	{
 		saves = ft_strdup(leftovers);
-		free (leftovers);
+		free(leftovers);
 		leftovers = NULL;
 	}
-	saves = ft_read_join(saves, fd);
-	if (!ft_checksaves(saves))
+	saves = read_and_join(fd, saves);
+	if (!saves || *saves == '\0')
+	{
+		free(saves);
 		return (NULL);
+	}
 	newline = ft_strchr(saves, '\n');
 	if (newline && *(newline + 1) != '\0')
-		leftovers = ft_save_leftovers(saves);
+		leftovers = save_leftovers(saves);
 	result = ft_one_line(saves);
-	free (saves);
+	free(saves);
 	return (result);
 }
