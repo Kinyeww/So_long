@@ -1,4 +1,5 @@
 #include "So_long.h"
+#include "get_next_line/get_next_line.h"
 
 int	counter(char* filename)
 {
@@ -71,6 +72,5 @@ int	check_rectangular(char** map)
 		check = j;
 		i++;
 	}
-	printf("map is rectangular, yay :D\n");
 	return (1);
 }
