@@ -12,6 +12,8 @@ int	So_Long(char* filename);
 int	parsing_check(char** map);
 int	check_rectangular(char** map);
 int	map_is_walled(char** map);
+char*	getstr(char* str);
+void	free_array(char** str);
 
 
 #endif

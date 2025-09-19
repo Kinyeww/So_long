@@ -65,7 +65,7 @@ int	check_rectangular(char** map)
 		{
 			if (check != j)
 			{
-				printf("check = %d, j = %d", check, j);
+				printf("check = %d, j = %d\n", check, j);
 				return (0);
 			}
 		}
