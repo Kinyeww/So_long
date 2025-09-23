@@ -6,6 +6,18 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#ifndef PIXEL
+	#define PIXEL 64
+
+#endif
+
+typedef struct s_long
+{
+	int	coin;
+	void*	mlx;
+}	t_game;
+
+
 char**	load_map(char* filename);
 int	counter(char* filename);
 int	So_Long(char* filename);

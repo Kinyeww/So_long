@@ -1,7 +1,6 @@
 #include "get_next_line/get_next_line.h"
 #include "So_long.h"
 
-
 int find_p(char** str, int* pos_i, int* pos_j)
 {
 	int	i;
@@ -111,11 +110,13 @@ int	winnable(char** map)
 	while (check[i])
 	{
 		j = 0;
-		printf ("check[%d][%d] = %s\n", i, j, check[i]);
 		while (check[i][j])
 		{
 			if (check[i][j] == 'E' || check[i][j] == 'C')
+			{
+				printf ("\nfailed check[%d][%d] = %s", i, j, check[i]);
 				return (0);
+			}
 			j++;
 		}
 		i++;
@@ -132,7 +133,7 @@ char**	load_map(char* filename)
 
 	lines = counter(filename);
 	fd = open(filename, O_RDONLY);
-	str = malloc(sizeof(char *) * lines);
+	str = malloc(sizeof(char *) * lines + 1);
 	if (!str)
 		return (NULL);
 	i = 0;
