@@ -26,6 +26,8 @@ int	check_rectangular(char** map);
 int	map_is_walled(char** map);
 char*	getstr(char* str);
 void	free_array(char** str);
+int	initiate_minilibx(char** map);
+int	image_loader(void);
 
 
 #endif

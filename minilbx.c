@@ -1,7 +1,7 @@
 #include "So_long.h"
 #include "minilibx-linux/mlx.h"
 
-int	cal_size(char** map, int size, char cord)
+static int	cal_size(char** map, int size, char cord)
 {
 	int	x;
 	int	y;
@@ -12,14 +12,14 @@ int	cal_size(char** map, int size, char cord)
 	{
 		while (map[0][x])
 			x++;
-		return (x);
+		return (x * size);
 	}
 	while (map[y])
 		y++;
-	return (y);
+	return (y * size);
 }
 
-int	initiate_minilbx(char**	map)
+int	initiate_minilibx(char** map)
 {
 	void    *win;
 	int     width;
@@ -31,7 +31,7 @@ int	initiate_minilbx(char**	map)
 	solong.mlx = mlx_init();
 	if (!solong.mlx)
 		return (1); // handle error
-	win = mlx_new_window(mlx, width, height, "so_long");
+	win = mlx_new_window(solong.mlx, width, height, "so_long");
 }
 
 int	image_loader(void)
@@ -39,8 +39,9 @@ int	image_loader(void)
 	void    *wall;
 	int     img_w;
 	int     img_h;
+	t_game	solong;
 
-	wall = mlx_xpm_file_to_image(mlx, "wall.xpm", &img_w, &img_h);
+	wall = mlx_xpm_file_to_image(solong.mlx, "wall.xpm", &img_w, &img_h);
 	if (!wall)
 		return (1); // handle error
 }

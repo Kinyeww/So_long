@@ -205,6 +205,7 @@ int	So_Long(char* filename)
 		printf("\n---parsing failed---\n");
 		return (0);
 	}
+	initiate_minilibx(map);
 	return (1);
 }
 
