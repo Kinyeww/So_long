@@ -13,10 +13,22 @@
 
 typedef struct s_long
 {
-	int	coin;
-	void*	mlx;
+	void	*mlx;
+	void	*win;
+	void	*img;
+	void	*addr;
+	int	valid;
 }	t_game;
 
+typedef struct s_assets
+{
+	void	*wall;
+	void	*player;
+	void	*path;
+	void	*exit;
+	void	*c;
+	int	valid;
+}	t_assets;
 
 char**	load_map(char* filename);
 int	counter(char* filename);
@@ -26,8 +38,9 @@ int	check_rectangular(char** map);
 int	map_is_walled(char** map);
 char*	getstr(char* str);
 void	free_array(char** str);
-int	initiate_minilibx(char** map);
-int	image_loader(void);
+t_game	initiate_minilibx(char** map);
+t_assets	image_loader(t_game g);
+void	open_window(t_game game);
 
 
 #endif

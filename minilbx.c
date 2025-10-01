@@ -1,7 +1,7 @@
 #include "So_long.h"
 #include "minilibx-linux/mlx.h"
 
-static int	cal_size(char** map, int size, char cord)
+static int	cal_size(char **map, int size, char cord)
 {
 	int	x;
 	int	y;
@@ -19,29 +19,47 @@ static int	cal_size(char** map, int size, char cord)
 	return (y * size);
 }
 
-int	initiate_minilibx(char** map)
+t_game	initiate_minilibx(char **map)
 {
-	void    *win;
-	int     width;
-	int     height;
-	t_game	solong;
+	void	*win;
+	int		width;
+	int		height;
+	t_game	game;
 
 	width = cal_size(map, PIXEL, 'x');
 	height = cal_size(map, PIXEL, 'y');
-	solong.mlx = mlx_init();
-	if (!solong.mlx)
-		return (1); // handle error
-	win = mlx_new_window(solong.mlx, width, height, "so_long");
+	game.valid = 1;
+	game.mlx = mlx_init();
+	if (!game.mlx)
+		game.valid = 0;
+	game.win = mlx_new_window(game.mlx, width, height, "so_long");
+	open_window(game);
 }
 
-int	image_loader(void)
+t_assets	image_loader(t_game g)
 {
-	void    *wall;
-	int     img_w;
-	int     img_h;
-	t_game	solong;
+	int			img_w;
+	int			img_h;
+	t_assets	asset;
 
-	wall = mlx_xpm_file_to_image(solong.mlx, "wall.xpm", &img_w, &img_h);
-	if (!wall)
-		return (1); // handle error
+	asset.valid = 1;
+	asset.wall = mlx_xpm_file_to_image(g.mlx, "asset/wall.xpm", &img_w, &img_h);
+	asset.player = mlx_xpm_file_to_image(g.mlx, "asset/player.xpm", &img_w, &img_h);
+	asset.exit = mlx_xpm_file_to_image(g.mlx, "asset/exit.xpm", &img_w, &img_h);
+	asset.path = mlx_xpm_file_to_image(g.mlx, "asset/path.xpm", &img_w, &img_h);
+	asset.c = mlx_xpm_file_to_image(g.mlx, "asset/collectible.xpm", &img_w, &img_h);
+	if (!asset.wall || !asset.player || !asset.exit || !asset.path || !asset.c)
+		asset.valid = 0;
+	return (asset);
+}
+
+void	open_window(t_game game)
+{
+	t_assets	asset;
+
+	asset = image_loader(game);
+	if (asset.valid == 0)
+		return ;
+	mlx_put_image_to_window(game.mlx, game.win, asset.wall, 1, 1);
+	mlx_loop(game.mlx);
 }

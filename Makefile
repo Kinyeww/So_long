@@ -9,7 +9,7 @@ OBJS = $(SRCS:.c=.o)
 MLXFLAGS = -L$(MLX) -lmlx -lXext -lX11 -lm
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(MLXFLAGS) -o $(NAME)
+	$(CC) $(CCFLAGS) $(OBJS) $(MLXFLAGS) -o $(NAME)
 
 all: $(NAME)
 
