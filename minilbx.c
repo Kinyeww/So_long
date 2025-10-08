@@ -10,7 +10,7 @@ static int	cal_size(char **map, int size, char cord)
 	y = 0;
 	if (cord == 'x')
 	{
-		while (map[0][x])
+		while (map[0][x] && map[0][x] != '\n')
 			x++;
 		return (x * size);
 	}
@@ -19,47 +19,70 @@ static int	cal_size(char **map, int size, char cord)
 	return (y * size);
 }
 
-t_game	initiate_minilibx(char **map)
+void	initiate_minilibx(char **map)
 {
-	void	*win;
 	int		width;
 	int		height;
 	t_game	game;
 
 	width = cal_size(map, PIXEL, 'x');
 	height = cal_size(map, PIXEL, 'y');
-	game.valid = 1;
+	game.map = map;
 	game.mlx = mlx_init();
-	if (!game.mlx)
-		game.valid = 0;
 	game.win = mlx_new_window(game.mlx, width, height, "so_long");
-	open_window(game);
+	open_window(&game);
 }
 
-t_assets	image_loader(t_game g)
+void	image_loader(t_game *g)
 {
 	int			img_w;
 	int			img_h;
-	t_assets	asset;
 
-	asset.valid = 1;
-	asset.wall = mlx_xpm_file_to_image(g.mlx, "asset/wall.xpm", &img_w, &img_h);
-	asset.player = mlx_xpm_file_to_image(g.mlx, "asset/player.xpm", &img_w, &img_h);
-	asset.exit = mlx_xpm_file_to_image(g.mlx, "asset/exit.xpm", &img_w, &img_h);
-	asset.path = mlx_xpm_file_to_image(g.mlx, "asset/path.xpm", &img_w, &img_h);
-	asset.c = mlx_xpm_file_to_image(g.mlx, "asset/collectible.xpm", &img_w, &img_h);
-	if (!asset.wall || !asset.player || !asset.exit || !asset.path || !asset.c)
-		asset.valid = 0;
-	return (asset);
+	g->wall = mlx_xpm_file_to_image(g->mlx, "asset/wall.xpm", &img_w, &img_h);
+	g->player = mlx_xpm_file_to_image(g->mlx, "asset/player.xpm", &img_w, &img_h);
+	g->exit = mlx_xpm_file_to_image(g->mlx, "asset/exit.xpm", &img_w, &img_h);
+	g->path = mlx_xpm_file_to_image(g->mlx, "asset/path.xpm", &img_w, &img_h);
+	g->c = mlx_xpm_file_to_image(g->mlx, "asset/collectible.xpm", &img_w, &img_h);
 }
 
-void	open_window(t_game game)
+void	open_window(t_game *game)
 {
-	t_assets	asset;
+	image_loader(game);	
+	mlx_loop_hook(game->mlx, render, game);
+	mlx_loop(game->mlx);
+}
 
-	asset = image_loader(game);
-	if (asset.valid == 0)
-		return ;
-	mlx_put_image_to_window(game.mlx, game.win, asset.wall, 1, 1);
-	mlx_loop(game.mlx);
+int	render(t_game *game)
+{
+	mapping(game);
+	return (0);
+}
+
+void	mapping(t_game *game)
+{
+	int	i;
+	int	j;
+	char	**map;
+
+	map = game->map; 
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == '1')
+				mlx_put_image_to_window(game->mlx, game->win, game->wall, j * 64, i * 64);
+			else if (map[i][j] == '0')
+				mlx_put_image_to_window(game->mlx, game->win, game->path, j * 64, i * 64);
+			else if (map[i][j] == 'P')
+				mlx_put_image_to_window(game->mlx, game->win, game->player, j * 64, i * 64);
+			else if (map[i][j] == 'E')
+				mlx_put_image_to_window(game->mlx, game->win, game->exit, j * 64, i * 64);
+			else if (map[i][j] == 'C')
+				mlx_put_image_to_window(game->mlx, game->win, game->c, j * 64, i * 64);
+			j++;
+		}
+		i++;
+	}
 }

@@ -1,5 +1,5 @@
 NAME = so_long
-CC = gcc
+CC = cc
 CCFLAGS = -Wall -Wextra -Werror -Iget_next_line
 
 MLX = ./minilibx-linux
@@ -9,15 +9,21 @@ OBJS = $(SRCS:.c=.o)
 MLXFLAGS = -L$(MLX) -lmlx -lXext -lX11 -lm
 
 $(NAME): $(OBJS)
-	$(CC) $(CCFLAGS) $(OBJS) $(MLXFLAGS) -o $(NAME)
+	@$(CC) $(CCFLAGS) $(OBJS) $(MLXFLAGS) -o $(NAME)
+	@echo files compiled successfully!
 
 all: $(NAME)
 
+%.o: %.c
+	@$(CC) $(CCFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
+	@echo object files deleted successfully!
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
+	@echo [$(NAME).a] deleted successfully!
 
 re: fclean all
 
