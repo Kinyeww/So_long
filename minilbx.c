@@ -1,5 +1,6 @@
 #include "So_long.h"
 #include "minilibx-linux/mlx.h"
+#include <X11/keysym.h>
 
 static int	cal_size(char **map, int size, char cord)
 {
@@ -17,6 +18,12 @@ static int	cal_size(char **map, int size, char cord)
 	while (map[y])
 		y++;
 	return (y * size);
+}
+
+int	escape_game(t_game *game)
+{
+	free(game);
+	return (0);
 }
 
 void	initiate_minilibx(char **map)
@@ -47,9 +54,30 @@ void	image_loader(t_game *g)
 
 void	open_window(t_game *game)
 {
-	image_loader(game);	
+	printf("opening window\n");
+	image_loader(game);
+	mlx_key_hook(game->win, key_hook, game);
 	mlx_loop_hook(game->mlx, render, game);
 	mlx_loop(game->mlx);
+}
+
+int	key_hook(int keycode, t_game *game)
+{
+	printf("Keycode %d\n", keycode);
+	if (keycode == XK_w)
+		printf("fuck u");
+	else if (keycode == XK_a)
+		printf("fuck him");
+	else if (keycode == XK_s)
+		printf("fuck them");
+	else if (keycode == XK_d)
+		printf("fuck me");
+	else if (keycode == XK_Escape)
+	{
+		printf("heheheha grrrrr");
+		escape_game(game);
+	}
+	return (0);
 }
 
 int	render(t_game *game)
