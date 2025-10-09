@@ -9,6 +9,7 @@ OBJS = $(SRCS:.c=.o)
 MLXFLAGS = -L$(MLX) -lmlx -lXext -lX11 -lm
 
 $(NAME): $(OBJS)
+	make -C minilibx-linux
 	@$(CC) $(CCFLAGS) $(OBJS) $(MLXFLAGS) -o $(NAME)
 	@echo files compiled successfully!
 

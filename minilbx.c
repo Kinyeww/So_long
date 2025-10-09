@@ -30,10 +30,12 @@ int	initiate_minilibx(char **map)
 	height = cal_size(map, PIXEL, 'y');
 	game.map = map;
 	game.mlx = mlx_init();
+	if (!game.mlx)
+		return (0);
 	game.win = mlx_new_window(game.mlx, width, height, "so_long");
 	if (!(open_window(&game)))
-		return (1);
-	return (0);
+		return (0);
+	return (1);
 }
 
 int	exit_game(t_game *game)
@@ -41,13 +43,21 @@ int	exit_game(t_game *game)
 	int	x;
 
 	x = 0;
+	printf("exiting");
 	while (game->map[x])
 	{
 		free(game->map[x]);
 		x++;
 	}
 	free(game->map);
+	mlx_destroy_image(game->mlx, game->c);
+	mlx_destroy_image(game->mlx, game->exit);
+	mlx_destroy_image(game->mlx, game->path);
+	mlx_destroy_image(game->mlx, game->player);
+	mlx_destroy_image(game->mlx, game->wall);
 	mlx_destroy_window(game->mlx, game->win);
+	mlx_destroy_display(game->mlx);
+	free(game->mlx);
 	return (1);
 }
 
@@ -67,17 +77,15 @@ int	open_window(t_game *game)
 {
 	printf("opening window\n");
 	image_loader(game);
-	if (!(mlx_key_hook(game->win, key_hook, game)))
-		return (1);
-	mlx_loop_hook(game->mlx, render, game);
-	mlx_loop(game->mlx);
+	printf("mlx: %p, win: %p\n", game->mlx, game->win);
+	render(game);
+	mlx_key_hook(game->win, key_hook, game);
+	// mlx_loop(game->mlx);
 	return (0);
 }
 
 int	key_hook(int keycode, t_game *game)
 {
-	if (keycode == 1)
-		free(game);
 	printf("Keycode %d\n", keycode);
 	if (keycode == XK_w)
 		printf("fuck u\n");
@@ -91,13 +99,15 @@ int	key_hook(int keycode, t_game *game)
 	{
 		printf("heheheha grrrrr");
 		exit_game(game);
+		printf("mlx: %p, win: %p\n", game->mlx, game->win);
 	}
 	return (0);
 }
 
 int	render(t_game *game)
 {
-	mapping(game);
+	if (game->map != NULL)
+		mapping(game);
 	return (0);
 }
 

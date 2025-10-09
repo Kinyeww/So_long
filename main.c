@@ -121,11 +121,11 @@ int	winnable(char** map)
 		}
 		i++;
 	}
-	free_arr(check);
+	free_array(check);
 	return (1);
 }
 
-void	free_arr(char **array)
+void	free_array(char **array)
 {
 	int	x;
 	
@@ -147,7 +147,7 @@ char**	load_map(char* filename)
 
 	lines = counter(filename);
 	fd = open(filename, O_RDONLY);
-	str = malloc(sizeof(char *) * lines + 1);
+	str = malloc(sizeof(char *) * (lines + 1));
 	if (!str)
 		return (NULL);
 	i = 0;
@@ -161,7 +161,7 @@ char**	load_map(char* filename)
 	return (str);
 }
 
-void	free_array(char** str)
+/*void	free_array(char** str)
 {
 	int	i;
 
@@ -174,7 +174,7 @@ void	free_array(char** str)
 		free(str[i]);
 	}
 	free (str);
-}
+}*/
 
 int	map_content(char** map)
 {
@@ -220,7 +220,7 @@ int	So_Long(char* filename)
 		return (0);
 	}
 	if (!(initiate_minilibx(map)))
-		free(map);
+		free_array(map);
 	return (1);
 }
 
