@@ -20,13 +20,7 @@ static int	cal_size(char **map, int size, char cord)
 	return (y * size);
 }
 
-int	escape_game(t_game *game)
-{
-	free(game);
-	return (0);
-}
-
-void	initiate_minilibx(char **map)
+int	initiate_minilibx(char **map)
 {
 	int		width;
 	int		height;
@@ -37,7 +31,24 @@ void	initiate_minilibx(char **map)
 	game.map = map;
 	game.mlx = mlx_init();
 	game.win = mlx_new_window(game.mlx, width, height, "so_long");
-	open_window(&game);
+	if (!(open_window(&game)))
+		return (1);
+	return (0);
+}
+
+int	exit_game(t_game *game)
+{
+	int	x;
+
+	x = 0;
+	while (game->map[x])
+	{
+		free(game->map[x]);
+		x++;
+	}
+	free(game->map);
+	mlx_destroy_window(game->mlx, game->win);
+	return (1);
 }
 
 void	image_loader(t_game *g)
@@ -52,30 +63,34 @@ void	image_loader(t_game *g)
 	g->c = mlx_xpm_file_to_image(g->mlx, "asset/collectible.xpm", &img_w, &img_h);
 }
 
-void	open_window(t_game *game)
+int	open_window(t_game *game)
 {
 	printf("opening window\n");
 	image_loader(game);
-	mlx_key_hook(game->win, key_hook, game);
+	if (!(mlx_key_hook(game->win, key_hook, game)))
+		return (1);
 	mlx_loop_hook(game->mlx, render, game);
 	mlx_loop(game->mlx);
+	return (0);
 }
 
 int	key_hook(int keycode, t_game *game)
 {
+	if (keycode == 1)
+		free(game);
 	printf("Keycode %d\n", keycode);
 	if (keycode == XK_w)
-		printf("fuck u");
+		printf("fuck u\n");
 	else if (keycode == XK_a)
-		printf("fuck him");
+		printf("fuck him\n");
 	else if (keycode == XK_s)
-		printf("fuck them");
+		printf("fuck them\n");
 	else if (keycode == XK_d)
-		printf("fuck me");
+		printf("fuck me\n");
 	else if (keycode == XK_Escape)
 	{
 		printf("heheheha grrrrr");
-		escape_game(game);
+		exit_game(game);
 	}
 	return (0);
 }
@@ -90,24 +105,22 @@ void	mapping(t_game *game)
 {
 	int	i;
 	int	j;
-	char	**map;
 
-	map = game->map; 
 	i = 0;
-	while (map[i])
+	while (game->map[i])
 	{
 		j = 0;
-		while (map[i][j])
+		while (game->map[i][j])
 		{
-			if (map[i][j] == '1')
+			if (game->map[i][j] == '1')
 				mlx_put_image_to_window(game->mlx, game->win, game->wall, j * 64, i * 64);
-			else if (map[i][j] == '0')
+			else if (game->map[i][j] == '0')
 				mlx_put_image_to_window(game->mlx, game->win, game->path, j * 64, i * 64);
-			else if (map[i][j] == 'P')
+			else if (game->map[i][j] == 'P')
 				mlx_put_image_to_window(game->mlx, game->win, game->player, j * 64, i * 64);
-			else if (map[i][j] == 'E')
+			else if (game->map[i][j] == 'E')
 				mlx_put_image_to_window(game->mlx, game->win, game->exit, j * 64, i * 64);
-			else if (map[i][j] == 'C')
+			else if (game->map[i][j] == 'C')
 				mlx_put_image_to_window(game->mlx, game->win, game->c, j * 64, i * 64);
 			j++;
 		}
