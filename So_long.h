@@ -39,6 +39,8 @@ int	open_window(t_game *game);
 void	mapping(t_game *game);
 int	render(t_game *game);
 int	key_hook(int keycode, t_game *game);
+void	free_arr(char **array);
+
 
 
 #endif

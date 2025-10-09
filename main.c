@@ -121,7 +121,21 @@ int	winnable(char** map)
 		}
 		i++;
 	}
+	free_arr(check);
 	return (1);
+}
+
+void	free_arr(char **array)
+{
+	int	x;
+	
+	x = 0;
+	while (array[x])
+	{
+		free(array[x]);
+		x++;
+	}
+	free(array);
 }
 
 char**	load_map(char* filename)
