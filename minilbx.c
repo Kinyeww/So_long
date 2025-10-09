@@ -80,7 +80,7 @@ int	open_window(t_game *game)
 	printf("mlx: %p, win: %p\n", game->mlx, game->win);
 	render(game);
 	mlx_key_hook(game->win, key_hook, game);
-	// mlx_loop(game->mlx);
+	mlx_loop(game->mlx);
 	return (0);
 }
 
