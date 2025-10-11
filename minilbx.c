@@ -43,7 +43,7 @@ int	exit_game(t_game *game)
 	int	x;
 
 	x = 0;
-	printf("exiting");
+	printf("exiting\n");
 	while (game->map[x])
 	{
 		free(game->map[x]);
@@ -58,6 +58,7 @@ int	exit_game(t_game *game)
 	mlx_destroy_window(game->mlx, game->win);
 	mlx_destroy_display(game->mlx);
 	free(game->mlx);
+	printf("exit done\n");
 	return (1);
 }
 
@@ -77,7 +78,6 @@ int	open_window(t_game *game)
 {
 	printf("opening window\n");
 	image_loader(game);
-	printf("mlx: %p, win: %p\n", game->mlx, game->win);
 	render(game);
 	mlx_key_hook(game->win, key_hook, game);
 	mlx_loop(game->mlx);
@@ -86,7 +86,6 @@ int	open_window(t_game *game)
 
 int	key_hook(int keycode, t_game *game)
 {
-	printf("Keycode %d\n", keycode);
 	if (keycode == XK_w)
 		printf("fuck u\n");
 	else if (keycode == XK_a)
@@ -97,9 +96,9 @@ int	key_hook(int keycode, t_game *game)
 		printf("fuck me\n");
 	else if (keycode == XK_Escape)
 	{
-		printf("heheheha grrrrr");
 		exit_game(game);
 		printf("mlx: %p, win: %p\n", game->mlx, game->win);
+		exit(0);
 	}
 	return (0);
 }
