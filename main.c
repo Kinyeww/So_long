@@ -161,21 +161,6 @@ char**	load_map(char* filename)
 	return (str);
 }
 
-/*void	free_array(char** str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	while (i >= 0)
-	{
-		i--;
-		free(str[i]);
-	}
-	free (str);
-}*/
-
 int	map_content(char** map)
 {
 	int	i;
@@ -220,7 +205,11 @@ int	So_Long(char* filename)
 		return (0);
 	}
 	if (!(initiate_minilibx(map)))
+	{
+		printf("intiating minilibx");
 		free_array(map);
+		printf("minilibx shutting down");
+	}
 	return (1);
 }
 
@@ -249,8 +238,8 @@ int	parsing_check(char** map)
 		printf("why create a map that you couldn't win smh, you think you can hack issit\n");
 		return (0);
 	}
-	printf("all done broski, goodjob on submitting a valid map ;)\n");
-	printf("\n---S U C C E S S---");
+	printf("all done broski, goodjob on submitting a valid map ;)\n\n");
+	printf("---P A R S I N G---S U C C E S S---");
 	return (1);
 }
 

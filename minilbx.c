@@ -20,6 +20,29 @@ static int	cal_size(char **map, int size, char cord)
 	return (y * size);
 }
 
+void	locate_player(t_game *game)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while(game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'P')
+			{
+				printf("hi");
+				game->player_x = x;
+				game->player_y = y;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
 int	initiate_minilibx(char **map)
 {
 	int		width;
@@ -29,6 +52,8 @@ int	initiate_minilibx(char **map)
 	width = cal_size(map, PIXEL, 'x');
 	height = cal_size(map, PIXEL, 'y');
 	game.map = map;
+	locate_player(&game);
+	printf("player initial position x= %d y =%d", game.player_x, game.player_y);
 	game.mlx = mlx_init();
 	if (!game.mlx)
 		return (0);
@@ -80,20 +105,43 @@ int	open_window(t_game *game)
 	image_loader(game);
 	render(game);
 	mlx_key_hook(game->win, key_hook, game);
+	printf("mlx: %p, win: %p\n", game->mlx, game->win);
 	mlx_loop(game->mlx);
 	return (0);
+}
+
+void	move_player(t_game *game, int x, int y)
+{
+	int	new_x;
+	int	new_y;
+
+	new_y = game->player_y + y;
+	new_x = game->player_x + x;
+	printf("virtual position: x= %d y= %d\n", new_x, new_y);
+	if (game->map[new_y][new_x] != '1')
+	{
+		if (game->map[new_y][new_x] == 'E')
+		{
+			if (!(check_collectible(game)))
+				break;
+		game->player_y = new_y;
+		game->player_x = new_x;
+	}
+	else
+		printf("fucker u think u ghost ah can walk into walls >:(\n");
+	printf("actual position: x= %d y= %d\n", game->player_x, game->player_y);
 }
 
 int	key_hook(int keycode, t_game *game)
 {
 	if (keycode == XK_w)
-		printf("fuck u\n");
+		move_player(game, 0, -1);
 	else if (keycode == XK_a)
-		printf("fuck him\n");
+		move_player(game, -1, 0);
 	else if (keycode == XK_s)
-		printf("fuck them\n");
+		move_player(game, 0, 1);
 	else if (keycode == XK_d)
-		printf("fuck me\n");
+		move_player(game, 1, 0);
 	else if (keycode == XK_Escape)
 	{
 		exit_game(game);
