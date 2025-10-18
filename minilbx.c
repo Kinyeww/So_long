@@ -53,7 +53,7 @@ int	initiate_minilibx(char **map)
 	height = cal_size(map, PIXEL, 'y');
 	game.map = map;
 	locate_player(&game);
-	printf("player initial position x= %d y =%d", game.player_x, game.player_y);
+	game.move_count = 0;
 	game.mlx = mlx_init();
 	if (!game.mlx)
 		return (0);
@@ -83,6 +83,7 @@ int	exit_game(t_game *game)
 	mlx_destroy_window(game->mlx, game->win);
 	mlx_destroy_display(game->mlx);
 	free(game->mlx);
+	exit(0);
 	printf("exit done\n");
 	return (1);
 }
@@ -110,6 +111,74 @@ int	open_window(t_game *game)
 	return (0);
 }
 
+int	check_collectible(t_game *game)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (game->map[y])
+	{
+		x = 0;
+		while (game->map[y][x])
+		{
+			if (game->map[y][x] == 'C')
+				return (0);
+			x++;
+		}
+		y++;
+	}
+	return (1);
+}
+
+void	collecting(t_game *game)
+{
+	int	old_y;
+	int	old_x;
+
+	old_y = 0;
+	while (game->map[old_y])
+	{
+		old_x = 0;
+		while (game->map[old_y][old_x])
+		{
+			if (game->map[old_y][old_x] == 'P')
+			{
+				game->map[game->player_y][game->player_x] = 'P';
+				game->map[old_y][old_x] = '0';
+				return ;
+			}
+			old_x++;
+		}
+		old_y++;
+	}
+}
+
+void	walking(t_game *game)
+{
+	int	old_y;
+	int	old_x;
+	char	temp;
+
+	old_y = 0;
+	while (game->map[old_y])
+	{
+		old_x = 0;
+		while (game->map[old_y][old_x])
+		{
+			if (game->map[old_y][old_x] == 'P')
+			{
+				temp = game->map[game->player_y][game->player_x];
+				game->map[game->player_y][game->player_x] = 'P';
+				game->map[old_y][old_x] = temp;
+				return ;
+			}
+			old_x++;
+		}
+		old_y++;
+	}
+}
+
 void	move_player(t_game *game, int x, int y)
 {
 	int	new_x;
@@ -117,19 +186,26 @@ void	move_player(t_game *game, int x, int y)
 
 	new_y = game->player_y + y;
 	new_x = game->player_x + x;
-	printf("virtual position: x= %d y= %d\n", new_x, new_y);
-	if (game->map[new_y][new_x] != '1')
+	if (game->map[new_y][new_x] == '1')
 	{
-		if (game->map[new_y][new_x] == 'E')
-		{
-			if (!(check_collectible(game)))
-				break;
-		game->player_y = new_y;
-		game->player_x = new_x;
+		printf("moving into walls\n");
+		return ;
 	}
+	if (game->map[new_y][new_x] == 'E')
+	{
+		if (!check_collectible(game))
+			return ;
+		else
+			exit_game(game);
+	}
+	game->player_y = new_y;
+	game->player_x = new_x;
+	game->move_count += 1;
+	if (game->map[new_y][new_x] == 'C')
+		collecting(game);
 	else
-		printf("fucker u think u ghost ah can walk into walls >:(\n");
-	printf("actual position: x= %d y= %d\n", game->player_x, game->player_y);
+		walking(game);
+	printf("current position: x= %d y= %d\n", game->player_x, game->player_y);
 }
 
 int	key_hook(int keycode, t_game *game)
@@ -143,11 +219,12 @@ int	key_hook(int keycode, t_game *game)
 	else if (keycode == XK_d)
 		move_player(game, 1, 0);
 	else if (keycode == XK_Escape)
-	{
 		exit_game(game);
-		printf("mlx: %p, win: %p\n", game->mlx, game->win);
-		exit(0);
-	}
+	for (int i = 0; game->map[i]; i++)
+		printf("%s", game->map[i]);
+	printf("move count: %d\n", game->move_count);
+	mlx_clear_window(game->mlx, game->win);
+	render(game);
 	return (0);
 }
 

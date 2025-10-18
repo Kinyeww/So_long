@@ -25,6 +25,7 @@ typedef struct s_long
 	char	**map;
 	int		player_x;
 	int		player_y;
+	int		move_count;
 }	t_game;
 
 char**	load_map(char* filename);
@@ -44,5 +45,7 @@ int	key_hook(int keycode, t_game *game);
 void	free_arr(char **array);
 void	move_player(t_game *game, int x, int y);
 void	locate_player(t_game *game);
+void	update_map(t_game *game);
+
 
 #endif

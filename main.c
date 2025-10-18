@@ -1,7 +1,7 @@
 #include "get_next_line/get_next_line.h"
 #include "So_long.h"
 
-int find_p(char** str, int* pos_i, int* pos_j)
+int find_e(char** str, int* pos_i, int* pos_j)
 {
 	int	i;
 	int	j;
@@ -12,7 +12,7 @@ int find_p(char** str, int* pos_i, int* pos_j)
 		j = 0;
 		while (str[i][j])
 		{
-			if (str[i][j] == 'P')
+			if (str[i][j] == 'E')
 			{
 				*pos_i = i;
 				*pos_j = j;
@@ -104,7 +104,8 @@ int	winnable(char** map)
 		free_array(check);
 		return (0);
 	}
-	find_p(map, &i, &j);
+	find_e(map, &i, &j);
+	// find_p(map, &i, &j);
 	fill(check, i, j);
 	i = 0;
 	while (check[i])
@@ -112,7 +113,7 @@ int	winnable(char** map)
 		j = 0;
 		while (check[i][j])
 		{
-			if (check[i][j] == 'E' || check[i][j] == 'C')
+			if (check[i][j] == 'C')
 			{
 				printf ("\nfailed check[%d][%d] = %s", i, j, check[i]);
 				return (0);
