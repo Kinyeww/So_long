@@ -105,7 +105,6 @@ int	winnable(char** map)
 		return (0);
 	}
 	find_e(map, &i, &j);
-	// find_p(map, &i, &j);
 	fill(check, i, j);
 	i = 0;
 	while (check[i])
@@ -113,7 +112,7 @@ int	winnable(char** map)
 		j = 0;
 		while (check[i][j])
 		{
-			if (check[i][j] == 'C')
+			if (check[i][j] == 'C' || check[i][j] == 'P')
 			{
 				printf ("\nfailed check[%d][%d] = %s", i, j, check[i]);
 				return (0);
@@ -148,6 +147,8 @@ char**	load_map(char* filename)
 
 	lines = counter(filename);
 	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		return (NULL);
 	str = malloc(sizeof(char *) * (lines + 1));
 	if (!str)
 		return (NULL);
@@ -189,7 +190,6 @@ int	map_content(char** map)
 		}
 		i++;
 	}
-	printf("player = %d, collectible = %d, exit = %d\n", player, collectible, exit);
 	if (player != 1 || exit != 1 || collectible < 1)
 		return (0);
 	return (1);
@@ -200,7 +200,7 @@ int	So_Long(char* filename)
 	char**	map;
 
 	map = load_map(filename);
-	if (!(parsing_check(map)))
+	if ( !map || !(parsing_check(map)))
 	{
 		printf("\n---parsing failed---\n");
 		return (0);
@@ -246,7 +246,7 @@ int	parsing_check(char** map)
 
 int	main(void)
 {
-	if ((!So_Long("map.ber")))
+	if ((!So_Long("ma.ber")))
 	{
 		printf("\n---F A I L E D---\nerror\n");
 		return (1);
