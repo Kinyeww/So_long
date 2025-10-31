@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ckin-yew <ckin-yew@student.42kl.edu.m      +#+  +:+       +#+        */
+/*   By: ckin-yew <ckin-yew@student.42kl.edu.my>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 13:31:53 by ckin-yew          #+#    #+#             */
-/*   Updated: 2025/06/14 21:54:13 by ckin-yew         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:02:03 by ckin-yew         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,6 @@ char	*get_next_line(int fd)
 	char		*newline;
 	char		*result;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
 	saves = NULL;
 	if (leftovers)
 	{
