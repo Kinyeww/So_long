@@ -63,7 +63,7 @@ int	initiate_minilibx(char **map)
 	return (1);
 }
 
-int	exit_game(t_game *game)
+void	exit_game(t_game *game)
 {
 	int	x;
 
@@ -84,8 +84,6 @@ int	exit_game(t_game *game)
 	mlx_destroy_display(game->mlx);
 	free(game->mlx);
 	exit(0);
-	printf("exit done\n");
-	return (1);
 }
 
 void	image_loader(t_game *g)
@@ -205,7 +203,6 @@ void	move_player(t_game *game, int x, int y)
 		collecting(game);
 	else
 		walking(game);
-	printf("current position: x= %d y= %d\n", game->player_x, game->player_y);
 }
 
 int	key_hook(int keycode, t_game *game)
@@ -220,8 +217,6 @@ int	key_hook(int keycode, t_game *game)
 		move_player(game, 1, 0);
 	else if (keycode == XK_Escape)
 		exit_game(game);
-	for (int i = 0; game->map[i]; i++)
-		printf("%s", game->map[i]);
 	printf("move count: %d\n", game->move_count);
 	mlx_clear_window(game->mlx, game->win);
 	render(game);
